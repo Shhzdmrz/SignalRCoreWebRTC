@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SignalRCoreWebRTC.Hubs;
+using SignalRCoreWebRTC.Models;
 
 namespace SignalRCoreWebRTC
 {
@@ -17,6 +19,22 @@ namespace SignalRCoreWebRTC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            //Cross-origin policy to accept request from localhost:8084.
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    x => x.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+            services.AddSignalR();
+
+            //services.AddScoped<CommonDL>();
+            services.AddSingleton<List<User>>();
+            services.AddSingleton<List<UserCall>>();
+            services.AddSingleton<List<CallOffer>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -29,6 +47,7 @@ namespace SignalRCoreWebRTC
 
             app.UseStaticFiles();
             app.UseFileServer();
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 
@@ -36,6 +55,7 @@ namespace SignalRCoreWebRTC
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ConnectionHub>("/Hubs/WebRTCHub");
             });
         }
     }

@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.4.1",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "alertify.js@0.5.0",
+      "destination": "wwwroot/lib/alertify/"
+    },
+    {
+      "library": "twitter-bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@3.1.0",
+      "destination": "wwwroot/lib/signalr/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "icomoon@1.0.0",
+      "destination": "wwwroot/lib/icomoon/"
+    }
+  ,
+{
+  "library": "adapterjs@0.15.4",
+  "destination": "wwwroot/lib/adapter/"
+}
+]
+}
