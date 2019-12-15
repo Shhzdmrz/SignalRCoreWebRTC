@@ -2,7 +2,7 @@
 var hubUrl = document.location.pathname + 'ConnectionHub';
 var wsconn = new signalR.HubConnectionBuilder()
     .withUrl(hubUrl, signalR.HttpTransportType.WebSockets)
-    .configureLogging(signalR.LogLevel.Debug).build();
+    .configureLogging(signalR.LogLevel.Information).build();
 
 var peerConnectionConfig = {
     "iceServers": [
@@ -312,18 +312,18 @@ wsconn.on('updateUserList', (userList) => {
         var userIcon = '', status = '';
         if (userList[index].username === $("#upperUsername").text()) {
             myConnectionId = userList[index].connectionId;
-            userIcon = 'icon-user';
+            userIcon = 'icon-employee';
             status = 'Me';
         }
 
         if (!userIcon) {
-            userIcon = userList[index].inCall ? 'icon-phone-3' : 'icon-phone-4';
+            userIcon = userList[index].inCall ? 'icon-smartphone-1' : 'icon-smartphone-1';
         }
         status = userList[index].inCall ? 'In Call' : 'Available';
 
-        var listString = '<li class="user" data-cid=' + userList[index].connectionId + ' data-username=' + userList[index].username + '>';
+        var listString = '<li class="list-group-item user" data-cid=' + userList[index].connectionId + ' data-username=' + userList[index].username + '>';
         listString += '<a href="#"><div class="username"> ' + userList[index].username + '</div>';
-        listString += '<div class="helper ' + userIcon + '" data-callstatus=' + userList[index].inCall + '></div></a></li>';
+        listString += '<span class="helper ' + userIcon + '" data-callstatus=' + userList[index].inCall + '></span></a></li>';
         $('#usersdata').append(listString);
     });
 });

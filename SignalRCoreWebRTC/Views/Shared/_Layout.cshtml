@@ -13,8 +13,30 @@
     <link href="~/lib/alertifyjs/build/css/themes/default.min.css" rel="stylesheet" />
     <link href="~/Content/css/Custom.css" rel="stylesheet" />
 </head>
-<body>
-    @RenderBody()
+<body data-mode="idle">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebRTC Audio Caller</a>
+                @*<span id="loadingSpinner" class="glyphicon glyphicon-repeat fast-right-spinner"></span>*@
+                
+                <div class="collapse navbar-collapse">
+                    <span class="navbar-text text-right">
+                        You are <span id="upperUsername"></span>
+                    </span>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>

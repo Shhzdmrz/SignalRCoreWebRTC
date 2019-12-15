@@ -4,82 +4,80 @@
 }
 
 <!-- Invalid browser alert, and reminder to enable media things -->
-<div class="container-fluid">
-    <div class="row-fluid browser-warning">
-        <div class="span12">
-            <div class="alert alert-error">
-                <h4>Your browser does not appear to support WebRTC.</h4>
-                Try either the <a href="https://nightly.mozilla.org/">latest Firefox nightly build</a>, or
-                <a href="https://www.google.com/intl/en/chrome/browser/beta.html">Google Chrome Beta</a> to join the fun.
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Top Bar -->
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="brand pull-left" href="#">WebRTC Audio Caller</a>
-            <span id="loadingSpinner" class="glyphicon glyphicon-repeat fast-right-spinner"></span>
-            <div class="nav-collapse collapse">
-                <p class="navbar-text pull-right">
-                    You are <span id="upperUsername"></span>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- App Area -->
-<div class="container-fluid">
-    <div class="row-fluid">
-        <!-- Side Bar -->
-        <div class="span3">
-            <!-- In Call Actions -->
-            <div class="well actions">
-                <div id="callstatus" class="status">Idle</div>
-                <button class="btn btn-danger hangup">Hang Up</button>
-            </div>
-            <!-- User List -->
-            <div class="well user-list">
-                <ul id="usersdata" class="nav nav-list">
-                    <li class="nav-header">Online Users <small id="usersLength"></small></li>
-                    <!-- ko foreach: Users -->
-                    <li class="user" data-cid="" data-username="">
-                        <a href="#">
-                            <!-- only using an a here for bootstrap styling -->
-                            <div class="username"></div>
-                            <div class="helper" data-bind="css: $parent.getUserStatus($data)"></div>
-                        </a>
-                    </li>
-                    <!-- /ko -->
-                </ul>
-            </div>
-            <div class="well conn-type">
-                <button type="button" class="btn btn-dark">Connection Type <span class="badge badge-secondary">Audio</span></button>
-            </div>
-        </div>
-        <!-- Videos -->
-        <div class="span9">
-            <div class="row-fluid">
-                @*<div class="span6">
-                        <h4>You</h4>
-                        <video class="video mine cool-background" autoplay="autoplay"></video>
-                    </div>*@
-                <div class="span6">
-                    <h4>Partner</h4>
-                    <audio class="audio partner" autoplay="" controls=""></audio>
-                    @*<video class="video partner cool-background" autoplay="autoplay"></video>*@
+@*<div class="container-fluid">
+        <div class="row-fluid browser-warning">
+            <div class="span12">
+                <div class="alert alert-error">
+                    <h4>Your browser does not appear to support WebRTC.</h4>
+                    Try either the <a href="https://nightly.mozilla.org/">latest Firefox nightly build</a>, or
+                    <a href="https://www.google.com/intl/en/chrome/browser/beta.html">Google Chrome Beta</a> to join the fun.
                 </div>
             </div>
         </div>
+    </div>*@
+<!-- Top Bar -->
+@*<nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand pull-left" href="#">WebRTC Audio Caller</a>
+                <span id="loadingSpinner" class="glyphicon glyphicon-repeat fast-right-spinner"></span>
+                <div class="nav-collapse collapse">
+                    <p class="navbar-text pull-right">
+                        You are <span id="upperUsername"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </nav>*@
+<!-- App Area -->
+<div class="row-fluid">
+    <!-- Side Bar -->
+    <div class="span3">
+        <!-- In Call Actions -->
+        <div class="card card-body bg-light actions">
+            <div id="callstatus" class="status">Idle</div>
+            <button class="btn btn-danger hangup">Hang Up</button>
+        </div>
+        <!-- User List -->
+        <div class="card card-body bg-light user-list">
+            <ul id="usersdata" class="list-group">
+                <li class="list-group-item">Online Users <small id="usersLength"></small></li>
+                <!-- ko foreach: Users -->
+                <li class="list-group-item user" data-cid="" data-username="">
+                    <a href="#">
+                        <!-- only using an a here for bootstrap styling -->
+                        <div class="username"></div>
+                        <div class="helper" data-bind="css: $parent.getUserStatus($data)"></div>
+                    </a>
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+        <div class="card card-body bg-light conn-type">
+            <button type="button" class="btn btn-dark">Connection Type <span class="badge badge-secondary">Audio</span></button>
+        </div>
     </div>
-    <!-- Footer -->
-    <hr>
-    <footer>
-        <p class="pull-left">
-            <a href="http://www.webrtc.org/" target="_blank">WebRTC</a> |
-            <a href="https://www.wowza.com/docs/how-to-use-webrtc-with-wowza-streaming-engine" target="_blank">Wowza WebRTC</a>
-        </p>
-    </footer>
+    <!-- Videos -->
+    <div class="span9">
+        <div class="row-fluid">
+            @*<div class="span6">
+                    <h4>You</h4>
+                    <video class="video mine cool-background" autoplay="autoplay"></video>
+                </div>*@
+            <div class="span6">
+                <h4>Partner</h4>
+                <audio class="audio partner" autoplay="" controls=""></audio>
+                @*<video class="video partner cool-background" autoplay="autoplay"></video>*@
+            </div>
+        </div>
+    </div>
 </div>
+<!-- Footer -->
+<hr>
+<footer>
+    <p class="pull-left">
+        <a href="http://www.webrtc.org/" target="_blank">WebRTC</a> |
+        <a href="https://www.wowza.com/docs/how-to-use-webrtc-with-wowza-streaming-engine" target="_blank">Wowza WebRTC</a>
+    </p>
+</footer>
 

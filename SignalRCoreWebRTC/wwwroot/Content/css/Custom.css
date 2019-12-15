@@ -1,15 +1,4 @@
-﻿* {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-body {
-    padding-top: 60px;
-    padding-bottom: 40px;
-}
-
-/* loading indicator */
+﻿/* loading indicator */
 /* yep, I know it is off-center, but I dont want to figure out the right origin */
 @-moz-keyframes rotation {
     from {
