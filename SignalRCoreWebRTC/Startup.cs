@@ -31,7 +31,6 @@ namespace SignalRCoreWebRTC
 
             services.AddSignalR();
 
-            //services.AddScoped<CommonDL>();
             services.AddSingleton<List<User>>();
             services.AddSingleton<List<UserCall>>();
             services.AddSingleton<List<CallOffer>>();
@@ -55,7 +54,7 @@ namespace SignalRCoreWebRTC
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<ConnectionHub>("/Hubs/WebRTCHub");
+                endpoints.MapHub<ConnectionHub>("/ConnectionHub");
             });
         }
     }

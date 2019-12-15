@@ -1,6 +1,8 @@
-﻿var hubUrl = document.location.pathname + 'Hubs/WebRTCHub';
-var options = { transport: signalR.HttpTransportType.WebSockets, logger: signalR.LogLevel.None };
-var wsconn = new signalR.HubConnectionBuilder().withUrl(hubUrl, options).build();
+﻿const isDebugging = true;
+var hubUrl = document.location.pathname + 'ConnectionHub';
+var wsconn = new signalR.HubConnectionBuilder()
+    .withUrl(hubUrl, signalR.HttpTransportType.WebSockets)
+    .configureLogging(signalR.LogLevel.Debug).build();
 
 var peerConnectionConfig = {
     "iceServers": [
@@ -11,8 +13,49 @@ var peerConnectionConfig = {
     ]
 };
 
+$(document).ready(function () {
+    initializeSignalR();
 
-var webrtcConstraints = WEBRTC_CONSTRAINTS;
+    // Add click handler to users in the "Users" pane
+    $(document).on('click', '.user', function () {
+        console.log('calling user... ');
+        // Find the target user's SignalR client id
+        var targetConnectionId = $(this).attr('data-cid');
+
+        // Make sure we are in a state where we can make a call
+        if ($('body').attr("data-mode") !== "idle") {
+            alertify.error('Sorry, you are already in a call.  Conferencing is not yet implemented.');
+            return;
+        }
+
+        // Then make sure we aren't calling ourselves.
+        if (targetConnectionId != myConnectionId) {
+            // Initiate a call
+            wsconn.invoke('callUser', { "connectionId": targetConnectionId });
+
+            // UI in calling mode
+            $('body').attr('data-mode', 'calling');
+            $("#callstatus").text('Calling...');
+        } else {
+            alertify.error("Ah, nope.  Can't call yourself.");
+        }
+    });
+
+    // Add handler for the hangup button
+    $('.hangup').click(function () {
+        console.log('hangup....');
+        // Only allow hangup if we are not idle
+        //localStream.getTracks().forEach(track => track.stop());
+        if ($('body').attr("data-mode") !== "idle") {
+            wsconn.invoke('hangUp');
+            closeAllConnections();
+            $('body').attr('data-mode', 'idle');
+            $("#callstatus").text('Idle');
+        }
+    });
+});
+
+var webrtcConstraints = { audio: true, video: false };
 var streamInfo = { applicationName: WOWZA_APPLICATION_NAME, streamName: WOWZA_STREAM_NAME, sessionId: WOWZA_SESSION_ID_EMPTY };
 
 var WOWZA_STREAM_NAME = null, connections = {}, localStream = null;
@@ -179,12 +222,12 @@ const callbackUserMediaSuccess = (stream) => {
     if (audioTracks.length > 0) {
         console.log(`Using Audio device: ${audioTracks[0].label}`);
     }
-}
+};
 
 const initializeUserMedia = () => {
-    console.log('WebRTC: called initializeUserMedia: ');
+    console.log('WebRTC: InitializeUserMedia: ');
     navigator.getUserMedia(webrtcConstraints, callbackUserMediaSuccess, errorHandler);
-}
+};
 // stream removed
 const callbackRemoveStream = (connection, evt) => {
     console.log('WebRTC: removing remote stream from partner window');
@@ -244,84 +287,10 @@ const initializeConnection = (partnerClientId) => {
     return connection;
 }
 
-const initializeSignalR = () => {
-    wsconn.start().then(() => { console.log("SignalR: Connected"); askUsername(); }).catch(err => { console.log(err); errorHandler(err); });
-}
-
-const errorHandler = (error) => {
-    console.error(error);
-    if (error.message)
-        alertify.alert('<h4>Error Occurred</h4></br>Error Info: ' + JSON.stringify(error.message));
-    else
-        alertify.alert('<h4>Error Occurred</h4></br>Error Info: ' + JSON.stringify(error));
-}
-// Add click handler to users in the "Users" pane
-$('.user').on('click', function () {
-    console.log('calling user... ');
-    // Find the target user's SignalR client id
-    var targetConnectionId = $(this).attr('data-cid');
-
-    // Make sure we are in a state where we can make a call
-    if ($('body').attr("data-mode") !== "idle") {
-        alertify.error('Sorry, you are already in a call.  Conferencing is not yet implemented.');
-        return;
-    }
-
-    // Then make sure we aren't calling ourselves.
-    if (targetConnectionId != myConnectionId) {
-        // Initiate a call
-        wsconn.invoke('callUser', { "connectionId": targetConnectionId });
-
-        // UI in calling mode
-        $('body').attr('data-mode', 'calling');
-        $("#callstatus").text('Calling...');
-    } else {
-        alertify.error("Ah, nope.  Can't call yourself.");
-    }
-});
-
-// Add handler for the hangup button
-$('.hangup').click(function () {
-    console.log('hangup....');
-    // Only allow hangup if we are not idle
-    //localStream.getTracks().forEach(track => track.stop());
-    if ($('body').attr("data-mode") !== "idle") {
-        wsconn.invoke('hangUp');
-        closeAllConnections();
-        $('body').attr('data-mode', 'idle');
-        $("#callstatus").text('Idle');
-    }
-});
-
 sendHubSignal = (candidate, partnerClientId) => {
     console.log('SignalR: called sendhubsignal ');
     wsconn.invoke('sendSignal', candidate, partnerClientId).catch(errorHandler);
-}
-
-setUsername = (username) => {
-    //console.log('WebRTC: set username ');
-    wsconn.invoke("Join", username).catch((err) => {
-        console.log(err);
-        alertify.alert('<h4>Failed SignalR Connection</h4> We were not able to connect you to the signaling server.<br/><br/>Error: ' + JSON.stringify(err));
-        //viewModel.Loading(false);
-    });
-    WOWZA_STREAM_NAME = username;
-    $("#upperUsername").text(username);
-    $('div.username').text(username);
-    initializeUserMedia();
-}
-
-askUsername = () => {
-    //console.log('WebRTC: ask username ');
-    alertify.prompt("What is your name?", function (e, username) {
-        if (e == false || username == '') {
-            username = 'User ' + Math.floor((Math.random() * 10000) + 1);
-            alertify.success('You really need a username, so we will call you... ' + username);
-        }
-
-        setUsername(username);
-    }, '');
-}
+};
 
 wsconn.onclose(e => {
     if (e) {
@@ -335,8 +304,7 @@ wsconn.onclose(e => {
 
 // Hub Callback: Update User List
 wsconn.on('updateUserList', (userList) => {
-    //console.log('SignalR: called');
-    //console.log("UserList: ", userList);
+    consoleLogger('SignalR: called updateUserList' + JSON.stringify(userList));
     $("#usersLength").text(userList.length);
     $('#usersdata li.user').remove();
 
@@ -428,4 +396,54 @@ wsconn.on('callEnded', (signalingUser, signal) => {
     $("#callstatus").text('Idle');
 });
 
-initializeSignalR();
+const initializeSignalR = () => {
+    wsconn.start().then(() => { console.log("SignalR: Connected"); askUsername(); }).catch(err => console.log(err));
+};
+
+const setUsername = (username) => {
+    consoleLogger('SingnalR: setting username...');
+    wsconn.invoke("Join", username).catch((err) => {
+        consoleLogger(err);
+        alertify.alert('<h4>Failed SignalR Connection</h4> We were not able to connect you to the signaling server.<br/><br/>Error: ' + JSON.stringify(err));
+        //viewModel.Loading(false);
+    });
+    //WOWZA_STREAM_NAME = username;
+    $("#upperUsername").text(username);
+    $('div.username').text(username);
+    initializeUserMedia();
+};
+
+const askUsername = () => {
+    consoleLogger('SignalR: Asking username...');
+    alertify.prompt('Select a username', 'What is your name?', '', (evt, Username) => {
+        if (Username !== '')
+            setUsername(Username);
+        else
+            generateRandomUsername();
+
+    }, () => {
+        generateRandomUsername();
+    });
+};
+
+const generateRandomUsername = () => {
+    consoleLogger('SignalR: Generating random username...');
+    let username = 'User ' + Math.floor((Math.random() * 10000) + 1);
+    alertify.success('You really need a username, so we will call you... ' + username);
+    setUsername(username);
+};
+
+const errorHandler = (error) => {
+    if (error.message)
+        alertify.alert('<h4>Error Occurred</h4></br>Error Info: ' + JSON.stringify(error.message));
+    else
+        alertify.alert('<h4>Error Occurred</h4></br>Error Info: ' + JSON.stringify(error));
+
+    consoleLogger(error);
+};
+
+const consoleLogger = (val) => {
+    if (isDebugging) {
+        console.log(val);
+    }
+};

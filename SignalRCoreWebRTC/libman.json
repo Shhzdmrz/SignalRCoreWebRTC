@@ -7,10 +7,6 @@
       "destination": "wwwroot/lib/jquery/"
     },
     {
-      "library": "alertify.js@0.5.0",
-      "destination": "wwwroot/lib/alertify/"
-    },
-    {
       "library": "twitter-bootstrap@4.4.1",
       "destination": "wwwroot/lib/bootstrap/"
     },
@@ -23,11 +19,15 @@
       "provider": "jsdelivr",
       "library": "icomoon@1.0.0",
       "destination": "wwwroot/lib/icomoon/"
+    },
+    {
+      "library": "adapterjs@0.15.4",
+      "destination": "wwwroot/lib/adapter/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "alertifyjs@1.13.1",
+      "destination": "wwwroot/lib/alertifyjs/"
     }
-  ,
-{
-  "library": "adapterjs@0.15.4",
-  "destination": "wwwroot/lib/adapter/"
-}
-]
+  ]
 }
