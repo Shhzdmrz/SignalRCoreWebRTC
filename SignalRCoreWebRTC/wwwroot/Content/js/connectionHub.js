@@ -2,16 +2,16 @@
 var hubUrl = document.location.pathname + 'ConnectionHub';
 var wsconn = new signalR.HubConnectionBuilder()
     .withUrl(hubUrl, signalR.HttpTransportType.WebSockets)
-    .configureLogging(signalR.LogLevel.Information).build();
+    .configureLogging(signalR.LogLevel.None).build();
 
-var peerConnectionConfig = {
-    "iceServers": [
-        { "urls": "stun:stun.l.google.com:19302?transport=udp" },
-        { "urls": "stun:numb.viagenie.ca:3478?transport=udp" },
-        { "urls": "turn:numb.viagenie.ca:3478?transport=udp", "username": "shahzad@fms-tech.com", "credential": "P@ssw0rdfms" },
-        { "urls": "turn:turn-testdrive.cloudapp.net:3478?transport=udp", "username": "redmond", "credential": "redmond123" }
-    ]
-};
+var peerConnectionConfig = { "iceServers": [{ "url": "stun:stun.l.google.com:19302" }] };
+//    "iceServers": [
+//        { "urls": "stun:stun.l.google.com:19302?transport=udp" },
+//        { "urls": "stun:numb.viagenie.ca:3478?transport=udp" },
+//        { "urls": "turn:numb.viagenie.ca:3478?transport=udp", "username": "shahzad@fms-tech.com", "credential": "P@ssw0rdfms" },
+//        { "urls": "turn:turn-testdrive.cloudapp.net:3478?transport=udp", "username": "redmond", "credential": "redmond123" }
+//    ]
+//};
 
 $(document).ready(function () {
     initializeSignalR();
@@ -288,6 +288,7 @@ const initializeConnection = (partnerClientId) => {
 }
 
 sendHubSignal = (candidate, partnerClientId) => {
+    console.log('candidate', candidate);
     console.log('SignalR: called sendhubsignal ');
     wsconn.invoke('sendSignal', candidate, partnerClientId).catch(errorHandler);
 };

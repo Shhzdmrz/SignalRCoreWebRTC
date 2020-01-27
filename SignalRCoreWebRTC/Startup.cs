@@ -26,6 +26,7 @@ namespace SignalRCoreWebRTC
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddControllersWithViews();
 
             //Cross-origin policy to accept request from localhost:8084.
@@ -59,7 +60,7 @@ namespace SignalRCoreWebRTC
             }
 
             app.UseStaticFiles();
-            //app.UseFileServer();            
+            app.UseFileServer();
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
@@ -68,7 +69,10 @@ namespace SignalRCoreWebRTC
             {
                 //endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<ConnectionHub>("/ConnectionHub");
+                endpoints.MapHub<ConnectionHub>("/ConnectionHub", options =>
+                {
+                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
+                });
             });
         }
     }
