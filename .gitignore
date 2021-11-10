@@ -10,3 +10,5 @@
 /SignalRCoreWebRTC/bin
 /SignalRCoreWebRTC/obj
 /SignalRCoreWebRTC/Properties/PublishProfiles
+/.vscode/launch.json
+/.vscode/tasks.json
