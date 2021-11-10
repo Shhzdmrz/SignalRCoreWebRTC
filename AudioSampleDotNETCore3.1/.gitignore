@@ -1,0 +1,12 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/.vs/config
+/.vs/WowzaSample/DesignTimeBuild
+/.vs/WowzaSample/v15
+
+/SignalRCoreWebRTC/bin
+/SignalRCoreWebRTC/obj
+/SignalRCoreWebRTC/Properties/PublishProfiles
